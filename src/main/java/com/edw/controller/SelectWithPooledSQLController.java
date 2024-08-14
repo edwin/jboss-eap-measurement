@@ -1,6 +1,6 @@
 package com.edw.controller;
 
-import com.edw.service.DirectSQLService;
+import com.edw.service.PooledSQLService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,23 +14,23 @@ import java.util.Map;
 
 /**
  * <pre>
- *  com.edw.controller.SelectWithDirectSQLController
+ *  com.edw.controller.SelectWithPooledSQLController
  * </pre>
  *
  * @author Muhammad Edwin < edwin at redhat dot com >
- * 13 Aug 2024 16:28
+ * 14 Aug 2024 9:35
  */
-@WebServlet(name = "SelectWithDirectSQLController", urlPatterns = "/selectWithDirectSQL")
-public class SelectWithDirectSQLController extends HttpServlet {
+@WebServlet(name = "SelectWithPooledSQLController", urlPatterns = "/selectWithPooledSQL")
+public class SelectWithPooledSQLController extends HttpServlet {
 
-    private DirectSQLService directSQLService = new DirectSQLService();
+    private PooledSQLService pooledSQLService = new PooledSQLService();
 
     @Override
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<Map> result = directSQLService.select();
+        List<Map> result = pooledSQLService.select();
 
         response.setContentType("text/html");
 
