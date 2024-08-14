@@ -63,24 +63,27 @@ public class DirectSQLService {
         List<Map> list = new ArrayList<Map>();
 
         try {
-            String myDriver = "com.mysql.cj.jdbc.Driver";
-            String myUrl = "jdbc:mysql://localhost/test_db";
-            Class.forName(myDriver);
-            conn = DriverManager.getConnection(myUrl, "root", "password");
+            for (int i = 1; i <= 500; i++) {
+                String myDriver = "com.mysql.cj.jdbc.Driver";
+                String myUrl = "jdbc:mysql://localhost/test_db";
+                Class.forName(myDriver);
+                conn = DriverManager.getConnection(myUrl, "root", "password");
 
-            String sql = "select * from tb_testing";
+                String sql = "select * from tb_testing where id = ?";
 
-            preparedStmt = conn.prepareStatement(sql);
-            resultSet = preparedStmt.executeQuery();
+                preparedStmt = conn.prepareStatement(sql);
+                preparedStmt.setInt(1, i);
+                resultSet = preparedStmt.executeQuery();
 
-            while (resultSet.next()) {
-                Integer id = resultSet.getInt(1);
-                String username = resultSet.getString(2);
+                while (resultSet.next()) {
+                    Integer id = resultSet.getInt(1);
+                    String username = resultSet.getString(2);
 
-                list.add(new HashMap() {{
-                    put("id", id);
-                    put("username", username);
-                }});
+                    list.add(new HashMap() {{
+                        put("id", id);
+                        put("username", username);
+                    }});
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
