@@ -31,21 +31,21 @@ public class DirectSQLService {
                         "values (null, ?)";
 
                 preparedStmt = conn.prepareStatement(sql);
-                preparedStmt.setString (1, uuid);
+                preparedStmt.setString(1, uuid);
 
                 preparedStmt.execute();
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if(conn != null) {
+            if (conn != null) {
                 try {
                     conn.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
-            if(preparedStmt != null) {
+            if (preparedStmt != null) {
                 try {
                     preparedStmt.close();
                 } catch (Exception ex) {
@@ -62,8 +62,9 @@ public class DirectSQLService {
 
         List<Map> list = new ArrayList<Map>();
 
-        try {
-            for (int i = 1; i <= 500; i++) {
+
+        for (int i = 1; i <= 500; i++) {
+            try {
                 String myDriver = "com.mysql.cj.jdbc.Driver";
                 String myUrl = "jdbc:mysql://localhost/test_db";
                 Class.forName(myDriver);
@@ -84,29 +85,29 @@ public class DirectSQLService {
                         put("username", username);
                     }});
                 }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if(conn != null) {
-                try {
-                    conn.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
-            }
-            if(preparedStmt != null) {
-                try {
-                    preparedStmt.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                if (preparedStmt != null) {
+                    try {
+                        preparedStmt.close();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
-            }
-            if(resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                if (resultSet != null) {
+                    try {
+                        resultSet.close();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         }

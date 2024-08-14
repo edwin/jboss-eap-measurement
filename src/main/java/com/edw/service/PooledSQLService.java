@@ -24,9 +24,9 @@ public class PooledSQLService {
 
     private DataSource ds = null;
 
-    public PooledSQLService () {
+    public PooledSQLService() {
         try {
-            Context initCxt =  new InitialContext();
+            Context initCxt = new InitialContext();
             ds = (DataSource) initCxt.lookup("java:/test_dbDS");
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,45 +40,48 @@ public class PooledSQLService {
 
         List<Map> list = new ArrayList<Map>();
 
-        try {
-            conn = ds.getConnection();
+        for (int i = 1; i <= 500; i++) {
+            try {
+                conn = ds.getConnection();
 
-            String sql = "select * from tb_testing";
+                String sql = "select * from tb_testing where id = ?";
 
-            preparedStmt = conn.prepareStatement(sql);
-            resultSet = preparedStmt.executeQuery();
+                preparedStmt = conn.prepareStatement(sql);
+                preparedStmt.setInt(1, i);
+                resultSet = preparedStmt.executeQuery();
 
-            while (resultSet.next()) {
-                Integer id = resultSet.getInt(1);
-                String username = resultSet.getString(2);
+                while (resultSet.next()) {
+                    Integer id = resultSet.getInt(1);
+                    String username = resultSet.getString(2);
 
-                list.add(new HashMap() {{
-                    put("id", id);
-                    put("username", username);
-                }});
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if(conn != null) {
-                try {
-                    conn.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                    list.add(new HashMap() {{
+                        put("id", id);
+                        put("username", username);
+                    }});
                 }
-            }
-            if(preparedStmt != null) {
-                try {
-                    preparedStmt.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
-            }
-            if(resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                if (preparedStmt != null) {
+                    try {
+                        preparedStmt.close();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                if (resultSet != null) {
+                    try {
+                        resultSet.close();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         }
