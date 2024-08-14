@@ -36,8 +36,7 @@ for ((i=1;i<=10;i++));
 | Average | 0.2255915 |
 
 
-## Pooled Query 
-
+## Pooled Query
 
 ### Testing Script
 ```
@@ -66,8 +65,39 @@ for ((i=1;i<=10;i++));
 | Average | 0.2179052 |
 
 
+
+## Cached Query
+
+### Testing Script
+```
+for ((i=1;i<=10;i++)); 
+	do  
+		curl "http://localhost:8080/selectWithCachedSQL" -w '%{time_total}' -o /dev/null -s >> output.txt; 
+		echo "" >> output.txt; 
+	done
+```
+
+### Result
+
+| cycle   | Time     | 
+|---------|----------|
+| 1       | 0.214491 |
+| 2       | 0.220567 |
+| 3       | 0.220238 |
+| 4       | 0.222067 |
+| 5       | 0.210079 |
+| 6       | 0.219475 |
+| 7       | 0.204576 |
+| 8       | 0.217263 |
+| 9       | 0.214521 |
+| 10      | 0.223637 |
+| Total   | 2.166914 |
+| Average | 0.216691 |
+
+
 ## Summary
-| Method | Average  | Summary       |
-|--------|----------|---------------|
-| Direct Query       | 0.2255915 | Original Data |
-| Pooled Query       | 0.2179052 |  ~4% Faster   |
+| Method       | Average  | Summary       |
+|--------------|----------|---------------|
+| Direct Query | 0.2255915 | Original Data |
+| Pooled Query | 0.2179052 | ~4% Faster    |
+| Cached Query | 0.216691 | ~5% Faster    |
