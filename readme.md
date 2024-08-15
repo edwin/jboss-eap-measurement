@@ -101,3 +101,11 @@ for ((i=1;i<=10;i++));
 | Direct Query | 0.795442 | Baseline    |
 | Pooled Query | 0.431438 | ~45% Faster |
 | Cached Query | 0.216691 | ~70% Faster |
+
+# JBoss
+
+## Infinispan Configuration
+![Infinispan Config](images/cache-jboss.png)
+
+## Datasource Configuration
+![Infinispan Config](images/jboss-ds.png)
