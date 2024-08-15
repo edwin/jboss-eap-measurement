@@ -1,6 +1,5 @@
 package com.edw.service;
 
-import javax.annotation.Resource;
 import javax.inject.Singleton;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -14,9 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.infinispan.Cache;
-import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
-import org.infinispan.transaction.TransactionMode;
 
 /**
  * <pre>
@@ -38,8 +35,18 @@ public class CacheSQLService {
             Context initCxt =  new InitialContext();
             ds = (DataSource) initCxt.lookup("java:/test_dbDS");
 
-            EmbeddedCacheManager embeddedCacheManager = new DefaultCacheManager();
-            cache = embeddedCacheManager.createCache("tb_testing", new org.infinispan.configuration.cache.ConfigurationBuilder().build());
+            // put this on EJB cache-container
+            EmbeddedCacheManager embeddedCacheManager = (EmbeddedCacheManager) initCxt.lookup("java:jboss/infinispan/container/ejb");
+            try {
+                // create cache
+                cache = embeddedCacheManager.createCache("tb_testing", new org.infinispan.configuration.cache.ConfigurationBuilder()
+                        .simpleCache(true)
+                        .build());
+            } catch (Exception ex) {
+                // cache already there
+                cache = embeddedCacheManager.getCache("tb_testing");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,7 +57,10 @@ public class CacheSQLService {
         List<Map> list = new ArrayList<Map>();
 
         if(!cache.isEmpty()) {
-            list.addAll((List)cache.get("data"));
+            cache.forEach((id, username) -> list.add(new HashMap() {{
+                put("id", id);
+                put("username", username);
+            }}));
             return list;
         }
 
@@ -76,7 +86,7 @@ public class CacheSQLService {
                 }});
 
                 // add this data to cache
-                cache.put("data", list);
+                cache.put(id, username);
             }
         } catch (Exception e) {
             e.printStackTrace();
